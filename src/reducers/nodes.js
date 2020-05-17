@@ -1,5 +1,12 @@
-import {CHECK_NODE_STATUS_START, CHECK_NODE_STATUS_SUCCESS, CHECK_NODE_STATUS_FAILURE} from '../constants/actionTypes';
-import initialState from './initialState';
+import {
+  CHECK_NODE_STATUS_START,
+  CHECK_NODE_STATUS_SUCCESS,
+  CHECK_NODE_STATUS_FAILURE,
+  CHECK_NODE_BLOCKS_START,
+  CHECK_NODE_BLOCKS_SUCCESS,
+  CHECK_NODE_BLOCKS_FAILURE
+} from "../constants/actionTypes";
+import initialState from "./initialState";
 
 export default function nodesReducer(state = initialState().nodes, action) {
   let list, nodeIndex;
@@ -58,6 +65,40 @@ export default function nodesReducer(state = initialState().nodes, action) {
         ...state,
         list
       };
+
+    case CHECK_NODE_BLOCKS_START:
+      nodeIndex = state.list.findIndex(p => p.url === action.node.url);
+      return {
+        ...state,
+        list: Object.values({
+          ...state.list,
+          [nodeIndex]: { ...state.list[nodeIndex], blocks: { loading: true } }
+        })
+      };
+
+    case CHECK_NODE_BLOCKS_SUCCESS:
+      nodeIndex = state.list.findIndex(p => p.url === action.node.url);
+      return {
+        ...state,
+        list: Object.values({
+          ...state.list,
+          [nodeIndex]: {
+            ...state.list[nodeIndex],
+            blocks: { data: action.res.data, loading: false }
+          }
+        })
+      };
+
+    case CHECK_NODE_BLOCKS_FAILURE:
+      nodeIndex = state.list.findIndex(p => p.url === action.node.url);
+      return {
+        ...state,
+        list: Object.values({
+          ...state.list,
+          [nodeIndex]: { ...state.list[nodeIndex], blocks: { loading: false } }
+        })
+      };
+
     default:
       return state;
   }

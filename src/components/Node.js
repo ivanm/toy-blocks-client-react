@@ -7,10 +7,13 @@ import {
   Typography,
   ExpansionPanelDetails,
   makeStyles,
-  Box,
+  Box
 } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import colors from "../constants/colors";
 import Status from "./Status";
+import Block from "./Block";
+import { path } from "ramda";
 
 const Node = ({ node, expanded, toggleNodeExpanded }) => {
   const classes = useStyles();
@@ -26,7 +29,7 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => {
         classes={{
           expandIcon: classes.icon,
           content: classes.content,
-          expanded: classes.expanded,
+          expanded: classes.expanded
         }}
         expandIcon={<ExpandMoreIcon />}
       >
@@ -45,23 +48,31 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => {
           <Status loading={node.loading} online={node.online} />
         </Box>
       </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Typography>Blocks go here</Typography>
+      <ExpansionPanelDetails className={classes.blockWrapper}>
+        {path(["blocks", "data", "length"], node) ? (
+          node.blocks.data.map(({ id, attributes: { data } }, index) => (
+            <Block key={index} id={id} text={data} />
+          ))
+        ) : (
+          <div className={classes.loadingWrapper}>
+            <CircularProgress />
+          </div>
+        )}
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     margin: "16px 0",
     boxShadow: "0px 3px 6px 1px rgba(0,0,0,0.15)",
     "&:before": {
-      backgroundColor: "unset",
-    },
+      backgroundColor: "unset"
+    }
   },
   summary: {
-    padding: "0 24px",
+    padding: "0 24px"
   },
   summaryContent: {
     display: "flex",
@@ -69,33 +80,40 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingRight: 20,
+    paddingRight: 20
   },
   icon: {
-    color: colors.faded,
+    color: colors.faded
   },
   content: {
-    margin: "10px 0 !important", // Avoid change of sizing on expanded
+    margin: "10px 0 !important" // Avoid change of sizing on expanded
   },
   expanded: {
     "& $icon": {
       paddingLeft: 0,
       paddingRight: 12,
       top: -10,
-      marginRight: 0,
-    },
+      marginRight: 0
+    }
   },
   heading: {
     fontSize: theme.typography.pxToRem(17),
     display: "block",
     color: colors.text,
-    lineHeight: 1.5,
+    lineHeight: 1.5
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(14),
     color: colors.faded,
-    lineHeight: 2,
+    lineHeight: 2
   },
+  blockWrapper: {
+    flexDirection: "column"
+  },
+  loadingWrapper: {
+    justifyContent: "center",
+    display: "flex"
+  }
 }));
 
 Node.propTypes = {
@@ -103,10 +121,10 @@ Node.propTypes = {
     url: PropTypes.string,
     online: PropTypes.bool,
     name: PropTypes.string,
-    loading: PropTypes.bool,
+    loading: PropTypes.bool
   }).isRequired,
   expanded: PropTypes.bool,
-  toggleNodeExpanded: PropTypes.func.isRequired,
+  toggleNodeExpanded: PropTypes.func.isRequired
 };
 
 export default Node;

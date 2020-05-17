@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Block /> should match snapshot 1`] = `
+<div
+  className="MuiPaper-root MuiCard-root makeStyles-blockCard-1 MuiPaper-elevation0 MuiPaper-rounded"
+>
+  <p
+    className="MuiTypography-root makeStyles-blockHeading-3 MuiTypography-body1"
+  >
+    001
+  </p>
+  <p
+    className="MuiTypography-root makeStyles-blockContent-2 MuiTypography-body1"
+  >
+    Demo Text
+  </p>
+</div>
+`;

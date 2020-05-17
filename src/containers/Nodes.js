@@ -10,7 +10,7 @@ export class Nodes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      expandedNodeURL: null,
+      expandedNodeURL: null
     };
     this.toggleNodeExpanded = this.toggleNodeExpanded.bind(this);
   }
@@ -20,10 +20,15 @@ export class Nodes extends React.Component {
   }
 
   toggleNodeExpanded(node) {
-    this.setState({
-      expandedNodeURL:
-        node.url === this.state.expandedNodeURL ? null : node.url,
-    });
+    if (!node.blocks) {
+      this.props.actions.checkNodeBlocks(node);
+    }
+    if (node.online) {
+      this.setState({
+        expandedNodeURL:
+          node.url === this.state.expandedNodeURL ? null : node.url
+      });
+    }
   }
 
   render() {
@@ -33,7 +38,7 @@ export class Nodes extends React.Component {
         <Typography variant="h4" component="h1">
           <strong style={{ color: "#000" }}>Nodes</strong>
         </Typography>
-        {nodes.list.map((node) => (
+        {nodes.list.map(node => (
           <Node
             node={node}
             key={node.url}
@@ -48,18 +53,18 @@ export class Nodes extends React.Component {
 
 Nodes.propTypes = {
   actions: PropTypes.object.isRequired,
-  nodes: PropTypes.object.isRequired,
+  nodes: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    nodes: state.nodes,
+    nodes: state.nodes
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    actions: bindActionCreators(actions, dispatch)
   };
 }
 
